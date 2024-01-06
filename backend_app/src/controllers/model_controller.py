@@ -1,16 +1,24 @@
-from typing import Dict
+import logging
 import pandas as pd
+from typing import Dict, List
 
 from backend_app.src.schemas.iris_input import IrisInput
-from backend_app.src.utils import Utils
 
 class ModelController:
     
-    def predict(self, input: IrisInput) -> Dict[str, float]:
-        processed_input = pd.DataFrame(input.model_dump(), index = [0])
-        model = Utils.load_model()
-        prediction = model.predict(processed_input)[0]
+    def __init__(self, model) -> None:
+        self.model = model
     
-        return {
-            'prediction': int(prediction)
-        }
+    def predict(self, input: IrisInput) -> Dict[str, int]:
+        try:
+            processed_input = pd.DataFrame(input.model_dump(), index = [0])
+            prediction = self.model.predict(processed_input)[0]
+
+        except Exception as e:
+            logging.error(f'Unexpected error: {e}')
+        
+        else:
+            return {
+                'prediction': int(prediction)
+            }
+    
