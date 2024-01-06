@@ -6,6 +6,8 @@ from backend_app.src.controllers.model_controller import ModelController
 from backend_app.src.utils import Utils
 import logging
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+
 resource = {}
 
 @asynccontextmanager
