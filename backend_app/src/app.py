@@ -19,8 +19,11 @@ app = FastAPI(lifespan = app_lifestpan)
 
 @app.post('/predict')
 def predict(input: IrisInput):
-    controller = ModelController(model = resource['model'])
-    return controller.predict(input)
+    try:
+        controller = ModelController(model = resource['model'])
+        return controller.predict(input)
+    except Exception as e:
+        logging.error(e)
 
 if __name__ == '__main__':
     uvicorn.run(app)
