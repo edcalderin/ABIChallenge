@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "frontend-app"
 version = "0.1.0"
-description = "Frontend application"
+description = "Frontend Application"
 authors = ["Erick Calderin"]
 license = "Apache License"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 streamlit = "^1.29.0"
 requests = "^2.31.0"
 
