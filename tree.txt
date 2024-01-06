@@ -1,6 +1,0 @@
-.
-├── backend_app
-├── frontend_app
-└── tests
-
-3 directories
