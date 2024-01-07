@@ -18,6 +18,15 @@ class ModelController:
         self.__model = model
     
     def predict(self, input: IrisInput) -> Dict[str, int]:
+        '''
+        Predict a single sample
+        
+        Parameters:
+            input: Object of type IrisInput
+        
+        Returns:
+            Dictionary containing the prediction
+        '''
         try:
             processed_input = pd.DataFrame(input.model_dump(), index = [0])
             prediction = self.__model.predict(processed_input)[0]
@@ -33,7 +42,7 @@ class ModelController:
         Yields a record from the csv file
         
         Parameters:
-        csv_file: Csv file as UploadFile data type
+            csv_file: Csv file
         
         Returns:
             Generates a record one at a time.
@@ -45,13 +54,29 @@ class ModelController:
                 yield record
         except Exception as e:
             logging.error(e)
+            raise Exception(e)
         finally:
-            buffer.close()
+            # New try-except block to cover two approaches: If there are not exceptions and buffer is closed and in case of an exception
+            # by trying to read the csv file which arise an error because buffer variable does not exist.
+            try:
+                buffer.close()
+            except Exception as e:
+                logging.error('Error while closing buffer {e}')
     
-    async def predict_on_batch(self, csv_file: UploadFile):
+    async def predict_on_batch(self, csv_file: UploadFile) -> Dict[str, List[int]]:
+        '''
+        Predict a batch of samples
+        
+        Parameters:
+            csv_file: Csv file
+        
+        Returns:
+            Dictionary containing a list of  predictions.
+        '''
         try:
             if not csv_file.content_type == 'text/csv':
-                raise TypeError('Uploaded file is not a valid csv')
+                error_message: str = 'Invalid csv file'
+                raise TypeError(error_message)
             
             logging.info('Predicting on batch')
             records = [record async for record in self.__csv_reader(csv_file)]
@@ -64,12 +89,15 @@ class ModelController:
             return {
                 'predictions': list(map(int, predictions))
             }
-        
+
         except TypeError as e:
             logging.error(e)
+            raise TypeError(e)
 
         except Exception as e:
             logging.error(f'Error by getting predictions: {e}')
+            raise Exception(e)
+
         finally:
             await csv_file.close()
             

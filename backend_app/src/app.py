@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile
 import logging
 import uvicorn
 
@@ -25,13 +25,21 @@ app = FastAPI(lifespan = app_lifestpan)
 
 @app.post('/predict')
 def predict(input: IrisInput):
-    controller = SingletonModelController(model = resource.get('model'))
-    return controller.predict(input)
-
+    try:
+        controller = SingletonModelController(model = resource.get('model'))
+        return controller.predict(input)
+    
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = str(e))
+    
 @app.post('/predict-batch')
 async def predict_on_batch(csv_file: UploadFile = File(description='CSV File with Iris samples')):
-    controller = SingletonModelController(model = resource.get('model'))
-    return await controller.predict_on_batch(csv_file)
+    try:
+        controller = SingletonModelController(model = resource.get('model'))
+        return await controller.predict_on_batch(csv_file)
+    
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = str(e))
 
 if __name__ == '__main__':
     uvicorn.run(app)
