@@ -2,8 +2,7 @@ name: CI
 
 on: 
   pull_request:
-    paths:
-      - backend_app/src/**
+    types: [opened, reopened]
 
 jobs:
     tests:
