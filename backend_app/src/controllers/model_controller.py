@@ -1,4 +1,3 @@
-from contextlib import asynccontextmanager, contextmanager
 import logging
 from fastapi import UploadFile
 import pandas as pd
@@ -7,7 +6,7 @@ import csv
 from io import StringIO
 
 from backend_app.src.schemas.iris_input import IrisInput
-
+from backend_app.src.services.prediction_service import PredictionService
 class ModelController:
     
     '''
@@ -16,6 +15,7 @@ class ModelController:
     
     def __init__(self, model) -> None:
         self.__model = model
+        self.__prediction_service = PredictionService()
     
     def predict(self, input: IrisInput) -> Dict[str, int]:
         '''
@@ -30,8 +30,14 @@ class ModelController:
         try:
             processed_input = pd.DataFrame(input.model_dump(), index = [0])
             prediction = self.__model.predict(processed_input)[0]
+            prediction = int(prediction)
+
+            item: Dict = input.model_dump()
+            item['prediction'] = prediction
+
+            self.__prediction_service.insert_one_prediction(item)
             return {
-                'prediction': int(prediction)
+                'prediction': prediction
             }
 
         except Exception as e:
