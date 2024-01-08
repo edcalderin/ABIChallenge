@@ -38,7 +38,7 @@ The output should look like this:
 
 * ### Backend service
 
-Swagger documentation for FastAPI backend:
+`http://127.0.0.1:8000/docs`: Swagger documentation as shown bellow:
 
 ![Alt text](./images/swagger.png)
 
