@@ -2,6 +2,7 @@ import csv
 from fastapi import UploadFile
 from io import StringIO
 import logging
+import os
 import pandas as pd
 from typing import Dict, List
 
@@ -18,8 +19,9 @@ class ModelController:
     def __init__(self, model) -> None:
         self.__model = model
         self.__prediction_service = PredictionService()
-
-    def predict(self, input: IrisInput) -> Dict[str, int]:
+        self.__is_test = os.getenv('IS_TEST', 'False') == 'True'
+        
+    def predict(self, input: IrisInput) -> Dict[str, IrisResponse]:
         '''
         Predict a single sample
 
@@ -36,7 +38,8 @@ class ModelController:
 
             iris_response = IrisResponse(**input.model_dump() | {'prediction': prediction})
 
-            self.__prediction_service.insert_one_prediction(iris_response.model_dump())
+            if not self.__is_test:
+                self.__prediction_service.insert_one_prediction(iris_response.model_dump())
 
             return {
                 'prediction': iris_response
@@ -93,7 +96,7 @@ class ModelController:
             features_df = pd.DataFrame.from_records(features_list)
 
             features_df['prediction'] = self.__model.predict(features_df)
-
+            
             self.__prediction_service.insert_batch_predictions(features_df.to_dict('records'))
 
             return {

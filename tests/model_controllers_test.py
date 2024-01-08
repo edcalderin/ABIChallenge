@@ -1,5 +1,5 @@
+import os
 import pandas as pd
-from typing import Dict
 
 from backend_app.src.controllers.model_controller import ModelController
 from backend_app.src.schemas.iris_input import IrisInput
@@ -9,25 +9,25 @@ IRIS_INPUT_MOCK: IrisInput = IrisInput(
     sepal_length = 1.0,
     sepal_width = 1.0,
     petal_length = 1.0,
-    petal_width = 1.0,
+    petal_width = 1.0
 )
 
 class ModelTest:
-    def __init__(self, n: int) -> None:
-        self.__n = n
+    def __init__(self, length: int) -> None:
+        self.__length = length
 
     def predict(self, _: pd.DataFrame):
-        return [1]*self.__n
+        return [1]*self.__length
 
-model_controller = ModelController(model=ModelTest())
+os.environ['IS_TEST'] = 'True'
 
-def predict_test():
-    model_controller.predict(IRIS_INPUT_MOCK)
 
+def test_predict():
+    model_controller = ModelController(model = ModelTest(1))
     prediction = model_controller.predict(IRIS_INPUT_MOCK)
 
     expected = {
-        'prediction': {IRIS_INPUT_MOCK.model_dump() | 'prediction': 0}
+        'prediction': IrisResponse(**IRIS_INPUT_MOCK.model_dump() | {'prediction': 1})
     }
 
     assert prediction == expected
