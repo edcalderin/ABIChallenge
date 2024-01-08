@@ -52,6 +52,8 @@ Notebook in `notebooks/` directory to train a basic model with RandomForestClass
 
 ## Application architecture in production
 
+This is an approach using Docker, Kubernetes and AWS EKS to orchestrates clusters, preceded by a pipeline with Github Actions to automatically deploy the application.
+
 ![Alt text](./images/architecture.png)
 
 ## Checkpoints
