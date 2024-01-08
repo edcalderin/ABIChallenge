@@ -1,14 +1,12 @@
 # AB InBev MLOps Challenge
 
-# AB InBev MLOps Challenge
-
 ## Table of Contents
 
 <!--ts-->
 * [Directory layout](#directory-layout)
 * [Running the app with Docker](#running-the-app-with-docker)
 * [Notebooks](#notebooks)
-* [Architecture of application in Production](#architecture-of-application-in-roduction)
+* [Application architecture in production](#application-architecture-in-production)
 * [Checkpoints](#checkpoints)
 * [Conclusions](#conclusions)
 <!--te-->
@@ -32,9 +30,7 @@
 
 ## Running the app with Docker
 
-Run `make build_services` to start the services at first time or `make up_services` to start services after the initial build
-
-* `http://localhost:8080` (Backend service): Not only start a Uvicorn server, but fetches the dataset from Kaggle and train the model in the startup app.
+Run `docker-compose up --build` to start the services at first time or `docker-compose up` to start services after the initial build
 
 The output should look like this:
 
@@ -46,15 +42,19 @@ Swagger documentation for FastAPI backend:
 
 ![Alt text](./images/swagger.png)
 
-* Stop the services with `docker-compose down`
+* `/predict`: Predict a sample based on four features.
+* `/predict-batch`: Predict a batch of samples, the file `test/iris_test.csv` is provided to test this endpoint.
+* `/history`: Get the history of all the predictions.
+
+Remember stop the services with `docker-compose down`
 
 ## Notebooks
 
-Notebook in `notebooks/` directory to train a basic model with RandomForestClassifier using Iris Dataset.
+Notebook in `notebooks/` directory to train a basic model with RandomForestClassifier using Iris dataset.
 
-## Architecture of application in Production
+## Application architecture in production
 
-![Alt text](./images/awseb.png)
+![Alt text](./images/architecture.png)
 
 ## Checkpoints
 
@@ -68,3 +68,4 @@ Notebook in `notebooks/` directory to train a basic model with RandomForestClass
 
 ## Conclusions
 
+During this development I faced different challenges 
