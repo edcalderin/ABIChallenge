@@ -1,5 +1,4 @@
 from typing import Dict, List
-from datetime import datetime
 
 from backend_app.src.services.connection import MongoDatabase
 
@@ -14,9 +13,3 @@ class PredictionService:
 
     def insert_batch_predictions(self, predictions: List[Dict]):
         self.__collection_predictions.insert_many(predictions)
-
-    def get_prediction(self, date: datetime = None):
-        if date is None:
-            return self.__collection_predictions
-        else:
-            return self.__collection_predictions.find({'date': date})

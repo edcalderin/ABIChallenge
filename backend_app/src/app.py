@@ -4,13 +4,14 @@ import logging
 import uvicorn
 
 from backend_app.src.controllers.singleton_model_controller import SingletonModelController
+from backend_app.src.controllers.history_controller import HistoryController
 from backend_app.src.schemas.iris_input import IrisInput
 from backend_app.src.utils import Utils
 
 logging.basicConfig(level = logging.INFO, format = '%(asctime)s %(levelname)s %(message)s')
 
 resource = dict()
-   
+
 @asynccontextmanager
 async def app_lifestpan(_: FastAPI):
     '''
@@ -28,16 +29,25 @@ def predict(input: IrisInput):
     try:
         controller = SingletonModelController(model = resource.get('model'))
         return controller.predict(input)
-    
+
     except Exception as e:
         raise HTTPException(status_code = 500, detail = str(e))
-    
+
 @app.post('/predict-batch')
 async def predict_on_batch(csv_file: UploadFile = File(description='CSV File with Iris samples')):
     try:
         controller = SingletonModelController(model = resource.get('model'))
         return await controller.predict_on_batch(csv_file)
-    
+
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = str(e))
+
+@app.get('/history')
+def get_history():
+    try:
+        controller = HistoryController()
+        return controller.get_history()
+
     except Exception as e:
         raise HTTPException(status_code = 500, detail = str(e))
 
