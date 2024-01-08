@@ -5,11 +5,9 @@ services:
       - MONGO_HOST=mongodb
       - MONGO_PORT=27017
     ports:
-      - 8080:8080
+      - 8000:8000
 
   mongodb:
     image: mongo:latest
     ports:
       - 27017:27017
-    volumes:
-      - mongodb-data:/data/db
