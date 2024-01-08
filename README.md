@@ -63,9 +63,9 @@ This is an approach using Docker, Kubernetes and AWS EKS to orchestrates cluster
 - [x] Dependency and enviroment management
 - [x] Containerization (Docker with multi-stage)
 - [x] Tests
+- [X] CI/CD Workflow
 - [ ] Frontend application with Streamlit
 - [ ] Linter
-- [ ] CI/CD Workflow
 
 ## Conclusions
 
