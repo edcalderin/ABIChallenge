@@ -36,8 +36,6 @@ The output should look like this:
 
 ![Alt text](./images/docker_output.png)
 
-* ### Backend service
-
 `http://127.0.0.1:8000/docs`: Swagger documentation as shown bellow:
 
 ![Alt text](./images/swagger.png)
